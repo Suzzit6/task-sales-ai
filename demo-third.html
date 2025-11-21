@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Knowledge Hub Demo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,0..200" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-pattern {
+            background-image: radial-gradient(circle at center, #e5e5e5 1px, transparent 1px);
+            background-size: 20px 20px;
+            background-position: center;
+        }
+        .dark .bg-pattern {
+            background-image: radial-gradient(circle at center, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        }
+
+        /* Subtle animations */
+        .fade-in {
+            animation: fadeIn 0.6s ease-in;
+        }
+        
+        .slide-up {
+            animation: slideUp 0.8s ease-out;
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.6s ease-out;
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.6s ease-out;
+        }
+
+        .typing-animation {
+            border-right: 2px solid #f2930d;
+            animation: blink 1s infinite;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px); 
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0); 
+            }
+        }
+
+        @keyframes slideInRight {
+            from { 
+                opacity: 0;
+                transform: translateX(30px); 
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0); 
+            }
+        }
+
+        @keyframes slideInLeft {
+            from { 
+                opacity: 0;
+                transform: translateX(-30px); 
+            }
+            to { 
+                opacity: 1;
+                transform: translateX(0); 
+            }
+        }
+
+        @keyframes blink {
+            0%, 50% { border-right-color: #f2930d; }
+            51%, 100% { border-right-color: transparent; }
+        }
+
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        
+        .dark .card-hover:hover {
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+        }
+
+        .btn-pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { 
+                box-shadow: 0 0 0 0 rgba(242, 147, 13, 0.4);
+            }
+            70% { 
+                box-shadow: 0 0 0 6px rgba(242, 147, 13, 0);
+            }
+        }
+
+        .message-bubble {
+            animation: messageBubble 0.5s ease-out;
+        }
+
+        @keyframes messageBubble {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .loading-dots {
+            display: inline-block;
+        }
+
+        .loading-dots::after {
+            content: '';
+            animation: loadingDots 1.5s infinite;
+        }
+
+        @keyframes loadingDots {
+            0%, 20% { content: ''; }
+            40% { content: '.'; }
+            60% { content: '..'; }
+            80%, 100% { content: '...'; }
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#f2930d",
+              "background-light": "#f8f7f5",
+              "background-dark": "#221b10",
+              "user-bubble": "#4A90E2",
+              "ai-bubble-light": "#F0F2F5",
+              "ai-bubble-dark": "#3a3a3c",
+              "text-light": "#181511",
+              "text-dark": "#f8f7f5",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-text-light dark:text-text-dark">
+<div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="absolute inset-0 bg-pattern z-0"></div>
+<div class="relative z-10 layout-container flex h-full grow flex-col">
+<div class="px-4 sm:px-10 md:px-20 lg:px-40 flex flex-1 justify-center py-10 sm:py-16">
+<div class="layout-content-container flex flex-col max-w-[720px] flex-1 gap-8">
+<!-- Header Section -->
+<h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-center fade-in">Demo #3: Knowledge Hub</h1>
+<!-- Scenario Section -->
+<div class="flex flex-col gap-4 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-black/20 backdrop-blur-sm p-6 shadow-sm card-hover slide-up">
+<div class="flex items-center gap-4 bg-transparent min-h-14">
+<div class="flex items-center gap-4">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full h-12 w-12" data-alt="Avatar of Priya" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAhaZkEIEFCPBXRTx3w8-chOOpy0oK9mZN5Pwv4wpQx0gfUpKObq9B5qcBgJduBngcV-yyKiPL8d73EfyMx9o_8bIRDtB11GErxu37L9bYXU-odmTPtGTyRghysnj2wZiDL0eQKw8jukqQXawe9M-QStOfM1A7-yW-wD_2JO__o77ljK9ZVpcCB3LJgY9rzhLfz9r3KAIsQGkmMND9l1nZpo4FuV0mTuDBFmtBM0y7Dlmg5cdQI4YuktRbiF1ItIOWnkdX4JHsM-Ik");'></div>
+<p class="text-base font-medium">New salesperson Priya joins XYZ. She wonders:</p>
+</div>
+</div>
+<div class="flex flex-col gap-3 pl-4">
+<div class="flex items-center gap-4 bg-transparent fade-in" style="animation-delay: 0.2s;">
+<div class="flex items-center gap-4">
+<div class="text-zinc-500 dark:text-zinc-400 flex items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800 shrink-0 size-8">
+<span class="material-symbols-outlined text-lg">help</span>
+</div>
+<p class="text-base font-normal leading-normal flex-1">What are the most common objections?</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-transparent fade-in" style="animation-delay: 0.4s;">
+<div class="flex items-center gap-4">
+<div class="text-zinc-500 dark:text-zinc-400 flex items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800 shrink-0 size-8">
+<span class="material-symbols-outlined text-lg">insights</span>
+</div>
+<p class="text-base font-normal leading-normal flex-1">Which pitch strategies work best for different industries?</p>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-transparent fade-in" style="animation-delay: 0.6s;">
+<div class="flex items-center gap-4">
+<div class="text-zinc-500 dark:text-zinc-400 flex items-center justify-center rounded-lg bg-zinc-100 dark:bg-zinc-800 shrink-0 size-8">
+<span class="material-symbols-outlined text-lg">difference</span>
+</div>
+<p class="text-base font-normal leading-normal flex-1">How do we differ from our top competitors?</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Chat Interface -->
+<div class="flex flex-col gap-6 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white/50 dark:bg-black/20 backdrop-blur-sm p-4 sm:p-6 shadow-sm card-hover slide-up" style="animation-delay: 0.3s;">
+<div class="flex flex-col gap-5" id="chatMessages">
+<!-- Interaction 1 -->
+<div class="flex items-start gap-3 justify-end slide-in-right">
+<div class="flex max-w-[80%] flex-col items-end">
+<div class="rounded-t-xl rounded-bl-xl bg-user-bubble px-4 py-3 message-bubble">
+<p class="text-white text-base">How should I sell ABC Analytics to a small e-commerce company?</p>
+</div>
+</div>
+<img class="h-8 w-8 rounded-full" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvhlfDSauZX3svIJJFFnlGb3dZOr-uy7IeDmiLu6Sd7pb3aNQh9oi4ID8390KfSB1MfxCVzrx9O6MYfSNC6MJJVl5JZ24l1diloT7LIvnDJjufwvDkXxM0Vt6M9lJ6nP1Cwa3u4TCIF_7m2Z5tdTdGaoQMobDupoiYiuj9vCQQvqv5oSwT6CK8m61OzBMwTzQnJXtJR5EbUtc7-GcP4mWbag6gafdXAkH-_wewSd7IaFDQrXeBzmVN9l7HevBaZxc-lrhlBr_XY6Y"/>
+</div>
+<div class="flex items-start gap-3 slide-in-left" style="animation-delay: 0.2s;">
+<div class="flex size-8 items-center justify-center rounded-full bg-ai-bubble-light dark:bg-ai-bubble-dark text-text-light dark:text-text-dark">
+<span class="material-symbols-outlined">smart_toy</span>
+</div>
+<div class="flex max-w-[80%] flex-col">
+<div class="rounded-t-xl rounded-br-xl bg-ai-bubble-light dark:bg-ai-bubble-dark px-4 py-3 message-bubble">
+<p class="text-text-light dark:text-text-dark text-base">Focus on reducing cart abandonment, show real Diwali case study from past campaigns.</p>
+</div>
+</div>
+</div>
+<!-- Interaction 2 -->
+<div class="flex items-start gap-3 justify-end slide-in-right" style="animation-delay: 0.4s;">
+<div class="flex max-w-[80%] flex-col items-end">
+<div class="rounded-t-xl rounded-bl-xl bg-user-bubble px-4 py-3 message-bubble">
+<p class="text-white text-base">How do we handle pricing objections?</p>
+</div>
+</div>
+<img class="h-8 w-8 rounded-full" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmJ6bbFl2eGV92Bl2OUmW9s2CLc0ZMW3VGE3tuqAAC_S0t1LwCL9tWESTgVkeOqGQofErnVxXQs8Jki86ASii-2TIFzsHdvQLzZ4qt0R2vGStDiY7BhRIUG8kK7LjrNr9annYXCtlQB1rMEdPKBbJ5HFGQHjZNyqDvTezSjgO_WdOxjDMDVFFaAjlOCJr7OdeM9FonbqML4XF2nnBPca36VzKah5mEW1h7nLQ_nsLSqVbNf5eW3lk2PqNxn8mjG4LVQnstSgv0Kso"/>
+</div>
+<div class="flex items-start gap-3 slide-in-left" style="animation-delay: 0.6s;">
+<div class="flex size-8 items-center justify-center rounded-full bg-ai-bubble-light dark:bg-ai-bubble-dark text-text-light dark:text-text-dark">
+<span class="material-symbols-outlined">smart_toy</span>
+</div>
+<div class="flex max-w-[80%] flex-col">
+<div class="rounded-t-xl rounded-br-xl bg-ai-bubble-light dark:bg-ai-bubble-dark px-4 py-3 message-bubble">
+<p class="text-text-light dark:text-text-dark text-base">Highlight ROI and flexible billing during peak season.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Typing Indicator -->
+<div class="flex items-start gap-3" id="typingIndicator" style="display: none;">
+<div class="flex size-8 items-center justify-center rounded-full bg-ai-bubble-light dark:bg-ai-bubble-dark text-text-light dark:text-text-dark">
+<span class="material-symbols-outlined">smart_toy</span>
+</div>
+<div class="flex max-w-[80%] flex-col">
+<div class="rounded-t-xl rounded-br-xl bg-ai-bubble-light dark:bg-ai-bubble-dark px-4 py-3">
+<p class="text-text-light dark:text-text-dark text-base">
+<span class="loading-dots">Typing</span>
+</p>
+</div>
+</div>
+</div>
+<!-- Input Field -->
+<div class="mt-4 flex items-center gap-2 rounded-lg border border-zinc-200 dark:border-zinc-700 bg-background-light dark:bg-background-dark p-2 transition-colors duration-200 hover:border-primary/50">
+<input id="chatInput" class="w-full flex-1 bg-transparent border-none focus:ring-0 text-text-light dark:text-text-dark placeholder-zinc-400 dark:placeholder-zinc-500 focus:outline-none" placeholder="Ask anything..." type="text"/>
+<button id="sendButton" class="flex h-8 w-8 items-center justify-center rounded-md bg-primary text-white hover:bg-primary/90 transition-colors duration-200">
+<span class="material-symbols-outlined text-xl">arrow_upward</span>
+</button>
+</div>
+</div>
+<!-- Navigation Button -->
+<div class="flex justify-end pt-4">
+<button id="nextButton" class="inline-flex items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-semibold text-white shadow-sm transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 dark:ring-offset-background-dark btn-pulse">
+                        Next
+                        <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+// Random chatbot responses
+const botResponses = [
+    "Based on our knowledge base, focus on their pain points around customer retention and cart abandonment rates.",
+    "Highlight our competitive advantage in real-time analytics and personalized recommendations.",
+    "Use the case study from Fashion Forward - they saw 35% increase in conversions after implementing our solution.",
+    "Emphasize our flexible pricing model and quick ROI - most clients see results within 30 days.",
+    "Position against competitors by highlighting our superior customer support and onboarding process.",
+    "Address budget concerns by showing cost savings through reduced cart abandonment.",
+    "Reference our Diwali season success stories with similar e-commerce companies.",
+    "Focus on scalability - our solution grows with their business without additional infrastructure costs.",
+    "Mention our integration capabilities with their existing Shopify/WooCommerce setup.",
+    "Highlight our GDPR compliance and data security features - crucial for e-commerce."
+];
+
+let messageCount = 0;
+
+// Initialize page
+document.addEventListener('DOMContentLoaded', function() {
+    // Enable chat functionality
+    const chatInput = document.getElementById('chatInput');
+    const sendButton = document.getElementById('sendButton');
+    const nextButton = document.getElementById('nextButton');
+    
+    // Send message functionality
+    function sendMessage() {
+        const message = chatInput.value.trim();
+        if (!message) return;
+        
+        // Add user message
+        addUserMessage(message);
+        chatInput.value = '';
+        
+        // Show typing indicator
+        showTypingIndicator();
+        
+        // Generate bot response after delay
+        setTimeout(() => {
+            hideTypingIndicator();
+            addBotMessage(getRandomResponse());
+        }, 1000 + Math.random() * 1000); // Random delay between 1-2 seconds
+    }
+    
+    // Event listeners
+    sendButton.addEventListener('click', sendMessage);
+    chatInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+    
+    // Next button functionality
+    nextButton.addEventListener('click', function() {
+        const originalText = this.innerHTML;
+        this.innerHTML = '<span class="loading-dots">Loading</span>';
+        this.disabled = true;
+        
+        setTimeout(() => {
+            window.location.href = 'how-i-can-help.html';
+        }, 800);
+    });
+    
+    // Add subtle hover effects
+    const scenarios = document.querySelectorAll('.flex.items-center.gap-4.bg-transparent');
+    scenarios.forEach((scenario, index) => {
+        scenario.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'rgba(242, 147, 13, 0.05)';
+            this.style.transition = 'background-color 0.2s ease';
+        });
+        
+        scenario.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+        
+        // Add click functionality for pre-defined questions
+        scenario.addEventListener('click', function() {
+            const questionText = this.querySelector('p.flex-1').textContent;
+            chatInput.value = questionText;
+            sendMessage();
+        });
+    });
+});
+
+function addUserMessage(message) {
+    const chatMessages = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'flex items-start gap-3 justify-end slide-in-right';
+    messageDiv.innerHTML = `
+        <div class="flex max-w-[80%] flex-col items-end">
+            <div class="rounded-t-xl rounded-bl-xl bg-user-bubble px-4 py-3 message-bubble">
+                <p class="text-white text-base">${message}</p>
+            </div>
+        </div>
+        <img class="h-8 w-8 rounded-full" data-alt="User avatar" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvhlfDSauZX3svIJJFFnlGb3dZOr-uy7IeDmiLu6Sd7pb3aNQh9oi4ID8390KfSB1MfxCVzrx9O6MYfSNC6MJJVl5JZ24l1diloT7LIvnDJjufwvDkXxM0Vt6M9lJ6nP1Cwa3u4TCIF_7m2Z5tdTdGaoQMobDupoiYiuj9vCQQvqv5oSwT6CK8m61OzBMwTzQnJXtJR5EbUtc7-GcP4mWbag6gafdXAkH-_wewSd7IaFDQrXeBzmVN9l7HevBaZxc-lrhlBr_XY6Y"/>
+    `;
+    chatMessages.appendChild(messageDiv);
+    scrollToBottom();
+}
+
+function addBotMessage(message) {
+    const chatMessages = document.getElementById('chatMessages');
+    const messageDiv = document.createElement('div');
+    messageDiv.className = 'flex items-start gap-3 slide-in-left';
+    messageDiv.innerHTML = `
+        <div class="flex size-8 items-center justify-center rounded-full bg-ai-bubble-light dark:bg-ai-bubble-dark text-text-light dark:text-text-dark">
+            <span class="material-symbols-outlined">smart_toy</span>
+        </div>
+        <div class="flex max-w-[80%] flex-col">
+            <div class="rounded-t-xl rounded-br-xl bg-ai-bubble-light dark:bg-ai-bubble-dark px-4 py-3 message-bubble">
+                <p class="text-text-light dark:text-text-dark text-base">${message}</p>
+            </div>
+        </div>
+    `;
+    chatMessages.appendChild(messageDiv);
+    scrollToBottom();
+    messageCount++;
+}
+
+function showTypingIndicator() {
+    document.getElementById('typingIndicator').style.display = 'flex';
+    document.getElementById('typingIndicator').className = 'flex items-start gap-3 slide-in-left';
+    scrollToBottom();
+}
+
+function hideTypingIndicator() {
+    document.getElementById('typingIndicator').style.display = 'none';
+}
+
+function getRandomResponse() {
+    return botResponses[Math.floor(Math.random() * botResponses.length)];
+}
+
+function scrollToBottom() {
+    const chatMessages = document.getElementById('chatMessages');
+    setTimeout(() => {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }, 100);
+}
+</script>
+</body></html>

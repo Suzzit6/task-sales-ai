@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Company XYZ</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#3713ec",
+              "background-light": "#f6f6f8",
+              "background-dark": "#131022",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+
+        /* Subtle fade-in animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        .fade-in-delay-1 {
+            animation-delay: 0.2s;
+        }
+
+        .fade-in-delay-2 {
+            animation-delay: 0.4s;
+        }
+
+        .fade-in-delay-3 {
+            animation-delay: 0.6s;
+        }
+
+        .fade-in-delay-4 {
+            animation-delay: 0.8s;
+        }
+
+        .fade-in-delay-5 {
+            animation-delay: 1.0s;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hover effects */
+        .pain-point-item {
+            transition: all 0.3s ease;
+        }
+
+        .pain-point-item:hover {
+            transform: translateX(8px);
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+
+        /* Button hover effect */
+        .cta-button {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        /* Floating background elements */
+        .bg-float-1 {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .bg-float-2 {
+            animation: float 8s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(10px, -15px) rotate(1deg); }
+            50% { transform: translate(-5px, -25px) rotate(-1deg); }
+            75% { transform: translate(-15px, -10px) rotate(0.5deg); }
+        }
+    </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-[#212529] dark:text-gray-200">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden group/design-root">
+<!-- Subtle background gradient with floating animation -->
+<div class="absolute inset-0 z-0 overflow-hidden">
+<div class="absolute top-0 left-0 h-[50vh] w-[50vh] rounded-full bg-primary/10 blur-3xl dark:bg-primary/20 bg-float-1"></div>
+<div class="absolute bottom-0 right-0 h-[50vh] w-[50vh] rounded-full bg-primary/10 blur-3xl dark:bg-primary/20 bg-float-2"></div>
+</div>
+<div class="layout-container flex h-full grow flex-col z-10">
+<main class="flex flex-1 justify-center items-center py-16 px-4 sm:px-6 lg:px-8">
+<div class="layout-content-container flex flex-col max-w-4xl flex-1 gap-12 text-center items-center">
+<!-- Hero Section -->
+<div class="flex flex-col gap-6 text-center w-full max-w-3xl fade-in">
+<h1 class="text-5xl font-black leading-tight tracking-tighter sm:text-6xl md:text-7xl text-[#121118] dark:text-white">
+                            Meet Company XYZ
+                        </h1>
+<p class="text-lg leading-relaxed sm:text-xl text-slate-700 dark:text-slate-300 fade-in fade-in-delay-1">
+                            Company XYZ sells a software product called ABC Analytics to e-commerce companies in India. But their sales team struggles to close deals.
+                        </p>
+</div>
+<!-- Pain Points List -->
+<div class="w-full max-w-2xl bg-white/50 dark:bg-background-dark/50 backdrop-blur-sm border border-gray-200/50 dark:border-gray-800/50 rounded-xl shadow-sm p-2 fade-in fade-in-delay-2">
+<div class="flex flex-col divide-y divide-gray-200/80 dark:divide-gray-800">
+<!-- List Item 1 -->
+<div class="flex items-center gap-4 p-4 pain-point-item fade-in fade-in-delay-3">
+<div class="text-[#DC3545] flex items-center justify-center rounded-lg bg-[#DC3545]/10 shrink-0 size-10">
+<span class="material-symbols-outlined">close</span>
+</div>
+<p class="text-base font-medium leading-normal flex-1 text-left text-slate-800 dark:text-slate-200">They don't know which e-commerce companies are most likely to buy</p>
+</div>
+<!-- List Item 2 -->
+<div class="flex items-center gap-4 p-4 pain-point-item fade-in fade-in-delay-3">
+<div class="text-[#DC3545] flex items-center justify-center rounded-lg bg-[#DC3545]/10 shrink-0 size-10">
+<span class="material-symbols-outlined">close</span>
+</div>
+<p class="text-base font-medium leading-normal flex-1 text-left text-slate-800 dark:text-slate-200">They waste time researching each prospect before calling</p>
+</div>
+<!-- List Item 3 -->
+<div class="flex items-center gap-4 p-4 pain-point-item fade-in fade-in-delay-4">
+<div class="text-[#DC3545] flex items-center justify-center rounded-lg bg-[#DC3545]/10 shrink-0 size-10">
+<span class="material-symbols-outlined">close</span>
+</div>
+<p class="text-base font-medium leading-normal flex-1 text-left text-slate-800 dark:text-slate-200">After calls, they forget key details</p>
+</div>
+<!-- List Item 4 -->
+<div class="flex items-center gap-4 p-4 pain-point-item fade-in fade-in-delay-4">
+<div class="text-[#DC3545] flex items-center justify-center rounded-lg bg-[#DC3545]/10 shrink-0 size-10">
+<span class="material-symbols-outlined">close</span>
+</div>
+<p class="text-base font-medium leading-normal flex-1 text-left text-slate-800 dark:text-slate-200">New sales agents don't know the best scripts or product answers</p>
+</div>
+</div>
+</div>
+<!-- Call to Action Button -->
+<button onclick="navigateToNext()" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-gradient-to-r from-[#4A00E0] to-[#8E2DE2] text-white text-lg font-bold leading-normal tracking-wide shadow-lg hover:shadow-xl transition-shadow duration-300 cta-button fade-in fade-in-delay-5">
+<span class="truncate">Next →</span>
+</button>
+</div>
+</main>
+</div>
+</div>
+
+<script>
+    // Navigation function
+    function navigateToNext() {
+        // Add a slight delay for better UX
+        setTimeout(() => {
+            window.location.href = 'sales-enrichment.html';
+        }, 150);
+    }
+
+    // Optional: Add keyboard navigation
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            navigateToNext();
+        }
+    });
+
+    // Add subtle entrance animation on load
+    window.addEventListener('load', function() {
+        document.body.style.opacity = '0';
+        setTimeout(() => {
+            document.body.style.transition = 'opacity 0.5s ease';
+            document.body.style.opacity = '1';
+        }, 100);
+    });
+</script>
+</body></html>

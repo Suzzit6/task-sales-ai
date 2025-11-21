@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Sales Call Demo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+      }
+
+      /* Subtle animations */
+      .fade-in {
+        animation: fadeIn 0.6s ease-in;
+      }
+      
+      .slide-up {
+        animation: slideUp 0.8s ease-out;
+      }
+      
+      .slide-in-left {
+        animation: slideInLeft 0.8s ease-out;
+      }
+      
+      .slide-in-right {
+        animation: slideInRight 0.8s ease-out;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      @keyframes slideUp {
+        from { 
+          opacity: 0;
+          transform: translateY(30px); 
+        }
+        to { 
+          opacity: 1;
+          transform: translateY(0); 
+        }
+      }
+      
+      @keyframes slideInLeft {
+        from { 
+          opacity: 0;
+          transform: translateX(-30px); 
+        }
+        to { 
+          opacity: 1;
+          transform: translateX(0); 
+        }
+      }
+      
+      @keyframes slideInRight {
+        from { 
+          opacity: 0;
+          transform: translateX(30px); 
+        }
+        to { 
+          opacity: 1;
+          transform: translateX(0); 
+        }
+      }
+      
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      }
+      
+      .dark .card-hover:hover {
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      }
+      
+      .typing-effect {
+        border-right: 2px solid #13ec5b;
+        animation: blink 1s infinite;
+      }
+      
+      @keyframes blink {
+        0%, 50% { border-right-color: #13ec5b; }
+        51%, 100% { border-right-color: transparent; }
+      }
+
+      .transcript-message {
+        opacity: 0;
+        transform: translateY(10px);
+        animation: messageAppear 0.5s ease-out forwards;
+      }
+
+      @keyframes messageAppear {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      
+      .ai-pulse {
+        animation: aiPulse 2s ease-in-out infinite;
+      }
+      
+      @keyframes aiPulse {
+        0%, 100% {
+          box-shadow: 0 0 0 0 rgba(19, 236, 91, 0.2);
+        }
+        50% {
+          box-shadow: 0 0 0 8px rgba(19, 236, 91, 0);
+        }
+      }
+    </style>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ec5b",
+              "background-light": "#f6f8f6",
+              "background-dark": "#102216",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex min-h-screen w-full flex-col overflow-x-hidden">
+<div class="flex h-full grow flex-col">
+<div class="flex flex-1 justify-center px-4 py-6 sm:py-12 lg:px-8">
+<div class="flex max-w-4xl flex-1 flex-col items-center">
+<!-- SectionHeader -->
+<h2 class="text-[#111813] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-3 text-center fade-in">Demo #2: Sales Call Happens</h2>
+<!-- BodyText -->
+<p class="text-slate-600 dark:text-slate-400 text-base font-normal leading-normal pb-3 pt-1 px-4 text-center fade-in">Rahul forgets some things. But the call was recorded.</p>
+
+<!-- Card: Mock Phone Call UI -->
+<div class="mt-6 w-full max-w-lg rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 p-4 shadow-[0_4px_16px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.2)] slide-up card-hover">
+<div class="flex flex-col items-stretch justify-start rounded-lg">
+<div class="flex w-full min-w-0 grow flex-col items-stretch justify-center gap-2 p-2">
+<p class="text-sm font-medium text-slate-500 dark:text-slate-400">Salesperson Rahul calls FlipKart Style</p>
+<div class="space-y-3" id="transcriptContainer">
+  <!-- Transcript messages will be added here dynamically -->
+</div>
+</div>
+</div>
+</div>
+
+<!-- AI Insights Header -->
+<div class="mt-8 w-full flex items-center justify-center gap-3 fade-in" id="aiInsightsHeader" style="display: none;">
+<div class="flex items-center gap-2 bg-primary/10 dark:bg-primary/20 px-4 py-2 rounded-full border border-primary/20 dark:border-primary/30">
+<div class="w-3 h-3 bg-primary rounded-full ai-pulse"></div>
+<span class="text-primary text-sm font-semibold">AI analyzing call...</span>
+</div>
+</div>
+
+<!-- AI Generated Insights Section -->
+<div class="mt-4 w-full" id="aiInsightsSection" style="display: none;">
+<div class="flex items-center justify-center gap-3 mb-6 bg-primary/10 dark:bg-primary/20 px-6 py-3 rounded-lg border border-primary/20 dark:border-primary/30">
+<span class="material-symbols-outlined text-primary">psychology</span>
+<h3 class="text-lg font-bold text-[#111813] dark:text-white">AI-Generated Call Insights</h3>
+<span class="inline-flex items-center rounded-full bg-primary px-2.5 py-0.5 text-xs font-semibold text-[#111813]">POWERED BY AI</span>
+</div>
+
+<!-- TextGrid -->
+<div class="grid w-full grid-cols-1 gap-6 sm:grid-cols-2">
+<div class="flex flex-col gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 p-5 shadow-[0_4px_16px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.2)] card-hover slide-in-left">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400">
+<span class="material-symbols-outlined">checklist</span>
+</div>
+<h3 class="text-lg font-bold leading-tight text-[#111813] dark:text-white">Next Steps</h3>
+<span class="ml-auto text-xs text-primary font-medium bg-primary/10 px-2 py-1 rounded">AI</span>
+</div>
+<ul class="ml-2 space-y-2 text-sm text-slate-600 dark:text-slate-400">
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined mt-0.5 text-base text-blue-500">check_box</span>
+<span>Send pricing plan by Monday</span>
+</li>
+<li class="flex items-start gap-2">
+<span class="material-symbols-outlined mt-0.5 text-base text-blue-500">check_box</span>
+<span>Schedule product demo Wednesday</span>
+</li>
+</ul>
+</div>
+<div class="flex flex-col gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 p-5 shadow-[0_4px_16px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.2)] card-hover slide-in-right">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-amber-100 text-amber-600 dark:bg-amber-900/50 dark:text-amber-400">
+<span class="material-symbols-outlined">local_fire_department</span>
+</div>
+<h3 class="text-lg font-bold leading-tight text-[#111813] dark:text-white">Interest Signals</h3>
+<span class="ml-auto text-xs text-primary font-medium bg-primary/10 px-2 py-1 rounded">AI</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">Urgent need before Diwali</p>
+</div>
+<div class="flex flex-col gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 p-5 shadow-[0_4px_16px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.2)] card-hover slide-in-left">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-red-100 text-red-600 dark:bg-red-900/50 dark:text-red-400">
+<span class="material-symbols-outlined">warning</span>
+</div>
+<h3 class="text-lg font-bold leading-tight text-[#111813] dark:text-white">Risks</h3>
+<span class="ml-auto text-xs text-primary font-medium bg-primary/10 px-2 py-1 rounded">AI</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">High probability of discount request</p>
+</div>
+<div class="flex flex-col gap-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 p-5 shadow-[0_4px_16px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.2)] card-hover slide-in-right">
+<div class="flex items-center gap-3">
+<div class="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+<span class="material-symbols-outlined">manage_search</span>
+</div>
+<h3 class="text-lg font-bold leading-tight text-[#111813] dark:text-white">Competitor Mentions</h3>
+<span class="ml-auto text-xs text-primary font-medium bg-primary/10 px-2 py-1 rounded">AI</span>
+</div>
+<p class="text-sm text-slate-600 dark:text-slate-400">None detected</p>
+</div>
+</div>
+</div>
+
+<!-- Card: Follow-up Email -->
+<div class="mt-12 w-full rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/50 p-4 shadow-[0_4px_16px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.2)] card-hover slide-up" id="emailCard" style="display: none;">
+<div class="flex flex-col items-stretch justify-start">
+<div class="flex grow flex-col items-stretch justify-center gap-4">
+<div class="flex items-center gap-3">
+<p class="px-2 text-xl font-bold leading-tight tracking-[-0.015em] text-[#111813] dark:text-white">Draft Follow-up Email</p>
+<span class="inline-flex items-center rounded-full bg-primary px-2.5 py-0.5 text-xs font-semibold text-[#111813]">AI GENERATED</span>
+</div>
+<div class="flex flex-col gap-4 rounded-lg bg-background-light dark:bg-background-dark p-4 sm:flex-row sm:items-start sm:justify-between">
+<p class="flex-1 text-base text-slate-600 dark:text-slate-400">Hi team, Just had a call with FlipKart Style. They have an urgent need for reporting before the Diwali sale. Key follow-ups are to send the pricing plan by Monday and schedule a product demo for Wednesday. Be aware they will likely ask for a discount. Best, Rahul</p>
+<button onclick="copyEmail()" class="flex h-10 min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-primary px-4 text-sm font-medium text-[#111813] shadow-sm transition-all duration-200 hover:opacity-90">
+<span class="truncate">Ready to copy</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Next Button -->
+<div class="mt-12" id="nextButton" style="display: none;">
+<button onclick="nextDemo()" class="flex h-12 cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-xl bg-primary px-6 text-base font-bold text-[#111813] shadow-lg transition-all duration-200 hover:opacity-90">
+<span>Next Demo</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+// Transcript messages
+const transcriptMessages = [
+  { speaker: 'Rahul', message: 'Hi! Thanks for taking the time to speak with us today.', delay: 1000 },
+  { speaker: 'FlipKart', message: 'Hello Rahul, thanks for reaching out. How does pricing work? We need fast reporting before the Diwali sale.', delay: 2500 },
+  { speaker: 'Rahul', message: 'Sure I will send pricing plan by Monday and schedule a product demo by Wednesday.', delay: 4000 },
+  { speaker: 'FlipKart', message: 'That sounds perfect. The Diwali timeline is really critical for us.', delay: 5500 }
+];
+
+// Add transcript messages dynamically
+function addTranscriptMessage(speaker, message, isLast = false) {
+  const container = document.getElementById('transcriptContainer');
+  const messageDiv = document.createElement('div');
+  
+  messageDiv.className = `transcript-message p-3 rounded-lg ${
+    speaker === 'Rahul' 
+      ? 'bg-blue-50 dark:bg-blue-900/30 ml-8' 
+      : 'bg-green-50 dark:bg-green-900/30 mr-8'
+  }`;
+  
+  messageDiv.innerHTML = `
+    <p class="text-xs font-medium text-slate-500 dark:text-slate-400 mb-1">${speaker}:</p>
+    <p class="text-sm text-[#111813] dark:text-white">${message}${isLast ? '<span class="typing-effect ml-1"></span>' : ''}</p>
+  `;
+  
+  container.appendChild(messageDiv);
+  
+  // Scroll to show new message
+  messageDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+// Initialize transcript animation
+function startTranscript() {
+  transcriptMessages.forEach((msg, index) => {
+    setTimeout(() => {
+      addTranscriptMessage(msg.speaker, msg.message, index === transcriptMessages.length - 1);
+      
+      // Show AI analysis after call ends
+      if (index === transcriptMessages.length - 1) {
+        setTimeout(() => {
+          showAIAnalysis();
+        }, 1500);
+      }
+    }, msg.delay);
+  });
+}
+
+// Show AI analysis with loading state
+function showAIAnalysis() {
+  // Show AI analyzing header
+  document.getElementById('aiInsightsHeader').style.display = 'flex';
+  
+  setTimeout(() => {
+    // Hide analyzing header and show insights
+    document.getElementById('aiInsightsHeader').style.display = 'none';
+    document.getElementById('aiInsightsSection').style.display = 'block';
+    
+    // Show email card after insights
+    setTimeout(() => {
+      document.getElementById('emailCard').style.display = 'block';
+      
+      // Show next button
+      setTimeout(() => {
+        document.getElementById('nextButton').style.display = 'block';
+      }, 500);
+    }, 1000);
+  }, 2000);
+}
+
+// Copy email functionality
+function copyEmail() {
+  const emailText = "Hi team, Just had a call with FlipKart Style. They have an urgent need for reporting before the Diwali sale. Key follow-ups are to send the pricing plan by Monday and schedule a product demo for Wednesday. Be aware they will likely ask for a discount. Best, Rahul";
+  
+  navigator.clipboard.writeText(emailText).then(() => {
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<span class="truncate">Copied!</span>';
+    
+    setTimeout(() => {
+      button.innerHTML = originalText;
+    }, 2000);
+  });
+}
+
+// Next demo functionality
+function nextDemo() {
+  const button = event.target;
+  const originalText = button.innerHTML;
+  
+  button.innerHTML = '<span>Loading...</span>';
+  button.disabled = true;
+  
+  setTimeout(() => {
+    // For now, just show an alert - you can add the next demo page here
+    button.innerHTML = originalText;
+    button.disabled = false;
+    window.location.href = 'demo-third.html';
+  }, 1000);
+
+}
+
+
+// Initialize animations on page load
+window.addEventListener('load', function() {
+  // Start transcript after a brief delay
+  setTimeout(() => {
+    startTranscript();
+  }, 500);
+  
+  // Add staggered animations to grid items when they become visible
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, index) => {
+      if (entry.isIntersecting) {
+        entry.target.style.animationDelay = `${index * 0.1}s`;
+      }
+    });
+  });
+  
+  setTimeout(() => {
+    const gridItems = document.querySelectorAll('.slide-in-left, .slide-in-right');
+    gridItems.forEach(item => observer.observe(item));
+  }, 8000);
+});
+
+// Add hover effects for interactive elements
+document.addEventListener('DOMContentLoaded', function() {
+  // Add subtle hover effects to transcript messages
+  document.getElementById('transcriptContainer').addEventListener('mouseenter', function(e) {
+    if (e.target.closest('.transcript-message')) {
+      e.target.closest('.transcript-message').style.transform = 'scale(1.02)';
+      e.target.closest('.transcript-message').style.transition = 'transform 0.2s ease';
+    }
+  });
+  
+  document.getElementById('transcriptContainer').addEventListener('mouseleave', function(e) {
+    if (e.target.closest('.transcript-message')) {
+      e.target.closest('.transcript-message').style.transform = 'scale(1)';
+    }
+  });
+});
+</script>
+</body></html>

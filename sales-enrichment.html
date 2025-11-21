@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AI Sales Enrichment System</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#135bec",
+            "background-light": "#f6f6f8",
+            "background-dark": "#101622",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    /* Fade-in animations */
+    .fade-in {
+      opacity: 0;
+      animation: fadeIn 0.8s ease-out forwards;
+    }
+
+    .fade-in-delay-1 {
+      animation-delay: 0.3s;
+    }
+
+    .fade-in-delay-2 {
+      animation-delay: 0.6s;
+    }
+
+    .fade-in-delay-3 {
+      animation-delay: 0.9s;
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Slide-in animations */
+    .slide-in-left {
+      opacity: 0;
+      transform: translateX(-30px);
+      animation: slideInLeft 0.8s ease-out forwards;
+    }
+
+    .slide-in-right {
+      opacity: 0;
+      transform: translateX(30px);
+      animation: slideInRight 0.8s ease-out forwards;
+    }
+
+    @keyframes slideInLeft {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    /* Arrow pulse animation */
+    .arrow-pulse {
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+      }
+      50% {
+        transform: scale(1.1);
+      }
+    }
+
+    /* Button hover effects */
+    .cta-button {
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(19, 91, 236, 0.3);
+    }
+
+    .cta-button:active {
+      transform: translateY(0);
+    }
+
+    /* Table row hover effect */
+    .table-row {
+      transition: background-color 0.2s ease;
+    }
+
+    .table-row:hover {
+      background-color: rgba(19, 91, 236, 0.05);
+    }
+
+    /* Card hover effects */
+    .card-hover {
+      transition: all 0.3s ease;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Priority badge animations */
+    .priority-high {
+      animation: glow-green 2s ease-in-out infinite alternate;
+    }
+
+    .priority-medium {
+      animation: glow-yellow 3s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow-green {
+      from {
+        box-shadow: 0 0 5px rgba(34, 197, 94, 0.3);
+      }
+      to {
+        box-shadow: 0 0 10px rgba(34, 197, 94, 0.6);
+      }
+    }
+
+    @keyframes glow-yellow {
+      from {
+        box-shadow: 0 0 5px rgba(234, 179, 8, 0.3);
+      }
+      to {
+        box-shadow: 0 0 10px rgba(234, 179, 8, 0.6);
+      }
+    }
+  </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111318] dark:text-white">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center py-8 sm:py-12 lg:py-16">
+<div class="layout-content-container flex flex-col flex-1 max-w-6xl px-4 sm:px-6 lg:px-8">
+<div class="text-center fade-in">
+<h1 class="text-[#111318] dark:text-white tracking-tight text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight">AI Sales Enrichment System</h1>
+<p class="mt-4 text-[#616f89] dark:text-gray-300 text-base sm:text-lg max-w-3xl mx-auto">
+              XYZ has a list of 200 e-commerce leads with basic info. Our system enriches this list and transforms it into actionable intelligence.
+            </p>
+</div>
+<div class="mt-8 grid grid-cols-1 lg:grid-cols-[1fr_auto_2.5fr] items-center gap-8">
+<!-- Before Card -->
+<div class="bg-white dark:bg-gray-800/50 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 card-hover slide-in-left fade-in-delay-1">
+<h3 class="font-semibold text-lg text-center text-[#111318] dark:text-white mb-4">Before</h3>
+<ul class="space-y-3 text-gray-500 dark:text-gray-400">
+<li class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-600/50">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500">person</span>
+<span>Name</span>
+</li>
+<li class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-600/50">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500">phone</span>
+<span>Phone</span>
+</li>
+<li class="flex items-center gap-3 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg transition-colors hover:bg-gray-100 dark:hover:bg-gray-600/50">
+<span class="material-symbols-outlined text-gray-400 dark:text-gray-500">email</span>
+<span>Email</span>
+</li>
+</ul>
+</div>
+<!-- Transformation Arrow -->
+<div class="flex justify-center items-center -rotate-90 lg:rotate-0 fade-in-delay-2">
+<span class="material-symbols-outlined text-4xl text-primary transform transition-transform arrow-pulse">trending_flat</span>
+</div>
+<!-- After Card -->
+<div class="flex-1 @container slide-in-right fade-in-delay-2">
+<div class="bg-white dark:bg-gray-800/50 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 card-hover">
+<h3 class="font-semibold text-lg text-center text-[#111318] dark:text-white mb-4">After</h3>
+<div class="overflow-x-auto">
+<table class="w-full">
+<thead>
+<tr class="border-b border-b-gray-200 dark:border-b-gray-700">
+<th class="table-col-1 px-4 py-3 text-left text-[#111318] dark:text-gray-200 text-sm font-medium leading-normal">Lead</th>
+<th class="table-col-2 px-4 py-3 text-left text-[#111318] dark:text-gray-200 text-sm font-medium leading-normal">Revenue</th>
+<th class="table-col-3 px-4 py-3 text-left text-[#111318] dark:text-gray-200 text-sm font-medium leading-normal">Tech Used</th>
+<th class="table-col-4 px-4 py-3 text-left text-[#111318] dark:text-gray-200 text-sm font-medium leading-normal">Funding</th>
+<th class="table-col-5 px-4 py-3 text-left text-[#111318] dark:text-gray-200 text-sm font-medium leading-normal">Hiring?</th>
+<th class="table-col-6 px-4 py-3 text-left text-[#111318] dark:text-gray-200 text-sm font-medium leading-normal">Intent Score</th>
+<th class="table-col-7 px-4 py-3 text-left text-[#111318] dark:text-gray-200 text-sm font-medium leading-normal">Priority</th>
+</tr>
+</thead>
+<tbody>
+<tr class="border-b border-b-gray-200 dark:border-b-gray-700 table-row">
+<td class="table-col-1 px-4 py-3 text-[#111318] dark:text-white text-sm font-normal leading-normal">Zenith Watches</td>
+<td class="table-col-2 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">$50M</td>
+<td class="table-col-3 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">Shopify</td>
+<td class="table-col-4 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">Series B</td>
+<td class="table-col-5 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">Yes</td>
+<td class="table-col-6 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">85</td>
+<td class="table-col-7 px-4 py-3 text-sm font-normal leading-normal">
+<span class="inline-flex items-center justify-center rounded-full h-7 px-3 bg-green-100 dark:bg-green-900/50 text-green-800 dark:text-green-300 text-xs font-medium priority-high">High</span>
+</td>
+</tr>
+<tr class="table-row">
+<td class="table-col-1 px-4 py-3 text-[#111318] dark:text-white text-sm font-normal leading-normal">Apex Gear</td>
+<td class="table-col-2 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">$12M</td>
+<td class="table-col-3 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">Magento</td>
+<td class="table-col-4 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">Seed</td>
+<td class="table-col-5 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">No</td>
+<td class="table-col-6 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">42</td>
+<td class="table-col-7 px-4 py-3 text-sm font-normal leading-normal">
+<span class="inline-flex items-center justify-center rounded-full h-7 px-3 bg-yellow-100 dark:bg-yellow-900/50 text-yellow-800 dark:text-yellow-300 text-xs font-medium priority-medium">Medium</span>
+</td>
+</tr>
+<tr class="border-t border-t-[#dbdfe6] dark:border-t-gray-700 table-row">
+<td class="table-col-1 px-4 py-3 text-[#111318] dark:text-white text-sm font-normal leading-normal">Nova Goods</td>
+<td class="table-col-2 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">$3M</td>
+<td class="table-col-3 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">WooCommerce</td>
+<td class="table-col-4 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">Bootstrapped</td>
+<td class="table-col-5 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">No</td>
+<td class="table-col-6 px-4 py-3 text-[#616f89] dark:text-gray-400 text-sm font-normal leading-normal">15</td>
+<td class="table-col-7 px-4 py-3 text-sm font-normal leading-normal">
+<span class="inline-flex items-center justify-center rounded-full h-7 px-3 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-300 text-xs font-medium">Low</span>
+</td>
+</tr>
+</tbody>
+</table>
+<style>
+                      @container (max-width: 900px) {
+                        .table-col-2, .table-col-4, .table-col-5 { display: none; }
+                      }
+                      @container (max-width: 640px) {
+                        .table-col-3, .table-col-6 { display: none; }
+                      }
+                  </style>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-12 text-center fade-in-delay-3">
+<p class="text-[#111318] dark:text-gray-200 text-lg sm:text-xl font-medium leading-normal max-w-2xl mx-auto">
+              What if their team instantly knew which leads were worth pursuing and what each customer cared about?
+            </p>
+<div class="mt-6 flex justify-center">
+<button onclick="navigateToDemo()" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary text-white gap-2.5 text-base font-bold leading-normal tracking-[0.015em] cta-button">
+<span class="truncate">See How</span>
+<span class="material-symbols-outlined text-white" data-icon="ArrowRight" data-size="24px" data-weight="regular">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+    // Navigation function
+    function navigateToDemo() {
+        // Add a slight delay for better UX
+        setTimeout(() => {
+            window.location.href = 'demo-first.html';
+        }, 150);
+    }
+
+    // Optional: Add keyboard navigation
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter' || event.key === ' ') {
+            navigateToDemo();
+        }
+    });
+
+    // Add page load animation
+    window.addEventListener('load', function() {
+        document.body.style.opacity = '0';
+        setTimeout(() => {
+            document.body.style.transition = 'opacity 0.5s ease';
+            document.body.style.opacity = '1';
+        }, 100);
+    });
+
+    // Add subtle scroll reveal for elements
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+
+    // Observe elements for scroll animations
+    document.addEventListener('DOMContentLoaded', function() {
+        const animatedElements = document.querySelectorAll('.fade-in, .slide-in-left, .slide-in-right');
+        animatedElements.forEach(el => {
+            observer.observe(el);
+        });
+    });
+</script>
+</body></html>
