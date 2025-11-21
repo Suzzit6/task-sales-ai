@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lead Enrichment Demo</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+
+      /* Subtle animations */
+      .fade-in {
+        animation: fadeIn 0.6s ease-in;
+      }
+      
+      .slide-up {
+        animation: slideUp 0.8s ease-out;
+      }
+      
+      .progress-bar-animate {
+        animation: progressFill 2s ease-out 1s forwards;
+      }
+      
+      @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+      
+      @keyframes slideUp {
+        from { 
+          opacity: 0;
+          transform: translateY(30px); 
+        }
+        to { 
+          opacity: 1;
+          transform: translateY(0); 
+        }
+      }
+      
+      @keyframes progressFill {
+        from { width: 0%; }
+        to { width: 92%; }
+      }
+      
+      .search-button:hover {
+        background-color: #f1f5f9;
+        transition: background-color 0.2s ease;
+      }
+      
+      .dark .search-button:hover {
+        background-color: #374151;
+      }
+      
+      .card-hover {
+        transition: all 0.3s ease;
+      }
+      
+      .card-hover:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      }
+      
+      .dark .card-hover:hover {
+        box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+      }
+      
+      .btn-pulse {
+        animation: pulse 2s infinite;
+      }
+      
+      @keyframes pulse {
+        0%, 100% { 
+          box-shadow: 0 0 0 0 rgba(19, 236, 91, 0.4);
+        }
+        70% { 
+          box-shadow: 0 0 0 6px rgba(19, 236, 91, 0);
+        }
+      }
+      
+      .typing-animation {
+        border-right: 2px solid #13ec5b;
+        animation: blink 1s infinite;
+      }
+      
+      @keyframes blink {
+        0%, 50% { border-right-color: #13ec5b; }
+        51%, 100% { border-right-color: transparent; }
+      }
+      
+      .progress-bar {
+        width: 0%;
+        transition: width 0.5s ease-in-out;
+      }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ec5b",
+              "background-light": "#f6f8f6",
+              "background-dark": "#102216",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark">
+<div class="relative flex min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center py-6 sm:py-12 px-4">
+<div class="layout-content-container flex flex-col w-full max-w-[960px] flex-1">
+<!-- SectionHeader -->
+<h2 class="text-[#111813] dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-2 pt-3 text-center fade-in">Demo #1: Lead Enrichment</h2>
+<!-- BodyText -->
+<p class="text-slate-600 dark:text-slate-400 text-base font-normal leading-normal pb-3 pt-1 px-4 text-center fade-in">Search any company to enrich the lead, (search any compnay it gives actual results)</p>
+<!-- TextField -->
+<div class="flex w-full justify-center px-4 py-3 fade-in">
+<div class="flex w-full max-w-[480px] flex-wrap items-end">
+<label class="flex flex-col w-full">
+<div class="flex w-full flex-1 items-stretch rounded-lg shadow-sm border border-slate-200 dark:border-slate-700 hover:border-primary/50 transition-colors duration-200">
+<input id="companyInput" class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-l-lg text-[#111813] dark:text-white dark:bg-background-dark focus:outline-0 focus:ring-2 focus:ring-primary/50 dark:focus:ring-primary/50 border-0 h-14 placeholder:text-slate-500 dark:placeholder:text-slate-400 p-[15px] text-base font-normal leading-normal transition-all duration-200" placeholder="Enter e-commerce company name:" value="FlipKart Style"/>
+<div class="text-slate-500 dark:text-slate-400 flex border-l border-slate-200 dark:border-slate-700 bg-white dark:bg-background-dark items-center justify-center px-4 rounded-r-lg search-button cursor-pointer" onclick="searchCompany()">
+<span class="material-symbols-outlined">search</span>
+</div>
+</div>
+</label>
+</div>
+</div>
+<div class="p-4 mt-4" id="loadingAnimation" style="display: none;">
+<div class="flex flex-col items-center justify-center bg-white dark:bg-slate-900/50 rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.2)] p-8">
+<div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+<p id="loadingMessage" class="text-slate-600 dark:text-slate-400 text-sm font-medium">Thinking...</p>
+</div>
+</div>
+
+<!-- Enriched Lead Card -->
+<div class="p-4 mt-4 slide-up" id="leadCard" style="display: none;">
+<div class="flex flex-col items-stretch justify-start rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.2)] bg-white dark:bg-slate-900/50 card-hover">
+<!-- Card Header -->
+<div class="flex w-full grow flex-col items-stretch justify-center gap-1 p-6 border-b border-slate-200 dark:border-slate-800">
+<p class="text-[#111813] dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]" id="companyName">FlipKart Style</p>
+</div>
+<!-- DescriptionList / Data Grid -->
+<div class="p-2 sm:p-4 grid grid-cols-1 md:grid-cols-2 gap-x-4">
+<div class="flex flex-col gap-1 border-t border-solid border-slate-200 dark:border-slate-800 py-4 px-2">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal">Revenue</p>
+<p class="text-[#111813] dark:text-white text-sm font-normal leading-normal">₹45–60 Cr (estimated)</p>
+</div>
+<div class="flex flex-col gap-1 border-t border-solid border-slate-200 dark:border-slate-800 py-4 px-2">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal">Funding</p>
+<div class="flex items-center">
+<p class="text-[#111813] dark:text-white text-sm font-normal leading-normal">Recently raised</p>
+<span class="ml-2 inline-flex items-center rounded-full bg-green-100 dark:bg-green-900 px-2.5 py-0.5 text-xs font-semibold text-green-800 dark:text-green-200">Series A</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 border-t border-solid border-slate-200 dark:border-slate-800 py-4 px-2">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal">Tech Stack</p>
+<div class="flex items-center gap-3">
+<img class="h-5 w-5" data-alt="Shopify logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIyFjZuYAAr5-xWfiFyrKpEmBcq91qY80gLVaTSfCOyiloFptZWJER8f2kF5qtBYwuxzh8NOCovzXChVSJKwsrd2v86SSTU2d8ro1sC0bs4mx7U1wVxfUwojLX288oHmwsbXU8CwpKxlyG_zWo32KERlF3VN2LFh4B3IrWLpJnRKVy8uzRkYt1b5jTVWflrHYnr_uqs3jaZn8M9Rc7I8UMTfrAo_gQ5FYwEbHyL4ItUmNQp1zazLtY3FfCEvm7vEsNgzA4VaXMbpI"/>
+<img class="h-5 w-5" data-alt="Google Analytics logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDPTfVk06HT-ABRoDotp2h4WUkBKWAayKoUbqpIGBrX5UQmDp99he25x3BId6INWiOe4tcjZLEM7B0GOpXKJKkDET47h8pJoDDIZ6qIZcTUY08F1P5yStw56mleQsvZRVfjt4P0ez8-3vsy-viv66C5icvEx8Poip6XqcOY3Q4TKnV-zbgSJtb3jE6H2R43yX2RGIOU8M9KgAfqqBOhAD_1TmHbBAiDuVJuD7zHbwdXueoFasxvnvJwzWqJqDCCygy493_XKfrFLyY"/>
+<p class="text-[#111813] dark:text-white text-sm font-normal leading-normal">Shopify, Google Analytics</p>
+</div>
+</div>
+<div class="flex flex-col gap-1 border-t border-solid border-slate-200 dark:border-slate-800 py-4 px-2">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal">Buying Intent</p>
+<div class="flex items-center gap-2">
+<div class="w-full bg-slate-200 dark:bg-slate-700 rounded-full h-2.5">
+<div id="progressBar" class="bg-primary h-2.5 rounded-full progress-bar"></div>
+</div>
+<span class="text-primary text-sm font-semibold">HIGH (92%)</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 border-t border-solid border-slate-200 dark:border-slate-800 py-4 px-2 md:col-span-2">
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-normal">Why Good Fit</p>
+<p class="text-[#111813] dark:text-white text-sm font-normal leading-normal">Preparing for festive season traffic growth</p>
+</div>
+</div>
+
+<!-- Highlighted Callout & Button -->
+<div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 justify-between bg-primary/10 dark:bg-primary/20 p-4 m-4 rounded-lg border border-primary/20 dark:border-primary/30">
+<div class="flex items-center gap-3">
+<div class="flex-shrink-0 bg-primary/20 dark:bg-primary/30 rounded-full p-2">
+<span class="material-symbols-outlined text-primary !text-2xl">priority_high</span>
+</div>
+<p class="text-green-900 dark:text-green-100 text-base font-normal leading-normal">Now XYZ knows this lead should be top priority</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="flex justify-center p-4 border-t border-slate-200 dark:border-slate-800" id="fullDataButton" style="display: none;">
+<button onclick="showFullData()" class="text-primary hover:text-primary/80 text-sm font-medium transition-colors duration-200">
+View Complete AI Analysis →
+</button>
+</div>
+
+
+<!-- How It Works Section -->
+<div class="p-4 mt-8 slide-up" id="howItWorksSection" style="display: none;">
+<div class="flex flex-col items-stretch justify-start rounded-xl shadow-[0_4px_16px_rgba(0,0,0,0.05)] dark:shadow-[0_4px_16px_rgba(0,0,0,0.2)] bg-white dark:bg-slate-900/50 card-hover">
+<!-- Section Header -->
+<div class="flex w-full grow flex-col items-center justify-center gap-1 p-6 border-b border-slate-200 dark:border-slate-800">
+<div class="flex items-center gap-3 mb-2">
+<div class="bg-primary/20 dark:bg-primary/30 rounded-full p-2">
+<span class="material-symbols-outlined text-primary !text-2xl">auto_awesome</span>
+</div>
+<h3 class="text-[#111813] dark:text-white text-xl font-bold leading-tight tracking-[-0.015em]">How AI Makes This Possible</h3>
+</div>
+<p class="text-slate-600 dark:text-slate-400 text-sm text-center">From basic company name to actionable sales intelligence</p>
+</div>
+
+<!-- Process Steps -->
+<div class="p-6">
+<div class="space-y-6">
+<!-- Step 1: Company Identification -->
+<div class="flex gap-4 items-start">
+<div class="flex-shrink-0 w-8 h-8 bg-primary/20 dark:bg-primary/30 rounded-full flex items-center justify-center">
+<span class="text-primary font-bold text-sm">1</span>
+</div>
+<div class="flex-1">
+<h4 class="text-[#111813] dark:text-white font-semibold mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary !text-lg">business</span>
+Identify the Company
+</h4>
+<ul class="text-slate-600 dark:text-slate-400 text-sm space-y-1 ml-6">
+<li>• Match the name with its official website</li>
+<li>• Validate using public business profiles</li>
+</ul>
+</div>
+</div>
+
+<!-- Step 2: Multi-Source Data Collection -->
+<div class="flex gap-4 items-start">
+<div class="flex-shrink-0 w-8 h-8 bg-primary/20 dark:bg-primary/30 rounded-full flex items-center justify-center">
+<span class="text-primary font-bold text-sm">2</span>
+</div>
+<div class="flex-1">
+<h4 class="text-[#111813] dark:text-white font-semibold mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary !text-lg">cloud_sync</span>
+Multi-Source Data Collection
+</h4>
+<ul class="text-slate-600 dark:text-slate-400 text-sm space-y-1 ml-6">
+<li>• Uses APIs, verified business data, and web signals</li>
+</ul>
+</div>
+</div>
+
+<!-- Step 3: Smart Scraping -->
+<div class="flex gap-4 items-start">
+<div class="flex-shrink-0 w-8 h-8 bg-primary/20 dark:bg-primary/30 rounded-full flex items-center justify-center">
+<span class="text-primary font-bold text-sm">3</span>
+</div>
+<div class="flex-1">
+<h4 class="text-[#111813] dark:text-white font-semibold mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary !text-lg">web_asset</span>
+Smart Scraping (where allowed)
+</h4>
+<ul class="text-slate-600 dark:text-slate-400 text-sm space-y-1 ml-6">
+<li>• Public information from websites, job listings, profiles</li>
+</ul>
+</div>
+</div>
+
+<!-- Step 4: Signal Extraction -->
+<div class="flex gap-4 items-start">
+<div class="flex-shrink-0 w-8 h-8 bg-primary/20 dark:bg-primary/30 rounded-full flex items-center justify-center">
+<span class="text-primary font-bold text-sm">4</span>
+</div>
+<div class="flex-1">
+<h4 class="text-[#111813] dark:text-white font-semibold mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary !text-lg">analytics</span>
+Signal Extraction
+</h4>
+<ul class="text-slate-600 dark:text-slate-400 text-sm space-y-1 ml-6">
+<li>• Team size, growth patterns, tech presence, recent activity</li>
+</ul>
+</div>
+</div>
+
+<!-- Step 5: AI Reasoning -->
+<div class="flex gap-4 items-start">
+<div class="flex-shrink-0 w-8 h-8 bg-primary/20 dark:bg-primary/30 rounded-full flex items-center justify-center">
+<span class="text-primary font-bold text-sm">5</span>
+</div>
+<div class="flex-1">
+<h4 class="text-[#111813] dark:text-white font-semibold mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary !text-lg">psychology</span>
+AI Reasoning
+</h4>
+<ul class="text-slate-600 dark:text-slate-400 text-sm space-y-1 ml-6">
+<li>• Converts raw data into sales insights and priority scoring</li>
+</ul>
+</div>
+</div>
+
+<!-- End Result -->
+<div class="bg-primary/10 dark:bg-primary/20 rounded-lg p-4 border border-primary/20 dark:border-primary/30">
+<h4 class="text-green-900 dark:text-green-100 font-semibold mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-primary !text-lg">check_circle</span>
+End Result
+</h4>
+<p class="text-green-800 dark:text-green-200 text-sm">
+A basic lead becomes a <strong>fully actionable opportunity</strong>, ready for outreach.
+</p>
+</div>
+</div>
+</div>
+
+<!-- Next Insight Button - Moved Here -->
+<div class="flex justify-center p-6 border-t border-slate-200 dark:border-slate-800">
+<button onclick="nextInsight()" class="flex-shrink-0 min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-primary text-[#111813] text-base font-medium leading-normal shadow-sm hover:opacity-90 transition-all duration-200 btn-pulse">
+<span class="truncate">Next Insight →</span>
+</button>
+</div>
+</div>
+</div>
+
+<script>
+// Show the card on page load with animation
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        document.getElementById('leadCard').style.display = 'block';
+        // Animate progress bar
+        setTimeout(() => {
+            document.getElementById('progressBar').style.width = '92%';
+        }, 500);
+        
+        // Show "How It Works" section after lead card
+        setTimeout(() => {
+            document.getElementById('howItWorksSection').style.display = 'block';
+        }, 1200);
+    }, 800);
+});
+
+// Search functionality
+function searchCompany() {
+    const input = document.getElementById('companyInput');
+    const companyName = input.value.trim();
+    
+    if (!companyName) {
+        alert('Please enter a company name');
+        return;
+    }
+    
+    // Hide existing card
+    document.getElementById('leadCard').style.display = 'none';
+    
+    // Show loading
+    document.getElementById('loadingAnimation').style.display = 'block';
+    
+    // Simulate API call
+    setTimeout(() => {
+        document.getElementById('loadingAnimation').style.display = 'none';
+        document.getElementById('companyName').textContent = companyName;
+        document.getElementById('leadCard').style.display = 'block';
+        
+        // Reset and animate progress bar
+        document.getElementById('progressBar').style.width = '0%';
+        setTimeout(() => {
+            document.getElementById('progressBar').style.width = '92%';
+        }, 200);
+    }, 1500);
+}
+
+// Enter key functionality for search
+document.getElementById('companyInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchCompany();
+    }
+});
+
+// Next insight button functionality
+function nextInsight() {
+    // Add a subtle loading state
+    const button = event.target;
+    const originalText = button.innerHTML;
+    
+    button.innerHTML = '<span class="truncate">Loading...</span>';
+    button.disabled = true;
+    
+    // Simulate brief loading before redirect
+    setTimeout(() => {
+        window.location.href = 'demo-second.html';
+    }, 800);
+}
+
+// Add hover effects for interactive elements
+document.addEventListener('DOMContentLoaded', function() {
+    // Add typing effect to placeholder
+    const input = document.getElementById('companyInput');
+    let isTyping = false;
+    
+    input.addEventListener('focus', function() {
+        if (!isTyping && this.value === 'FlipKart Style') {
+            this.value = '';
+            this.classList.add('typing-animation');
+        }
+    });
+    
+    input.addEventListener('blur', function() {
+        this.classList.remove('typing-animation');
+        if (this.value === '') {
+            this.value = 'FlipKart Style';
+        }
+    });
+    
+    // Add subtle hover effects to grid items
+    const gridItems = document.querySelectorAll('.grid > div');
+    gridItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'rgba(19, 236, 91, 0.05)';
+            this.style.transition = 'background-color 0.2s ease';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+    });
+});
+</script>
+<script>
+// Global variable to store full API response
+let fullApiResponse = null;
+
+// Loading messages to cycle through
+const loadingMessages = [
+    "Thinking...",
+    "Grounding Google search...",
+    "LinkedIn search...",
+    "Analyzing company data...",
+    "Processing financial information...",
+    "Extracting growth signals...",
+    "Calculating buying intent...",
+    "Finalizing insights..."
+];
+
+let loadingMessageIndex = 0;
+let loadingInterval;
+
+function startLoadingAnimation() {
+    document.getElementById('loadingAnimation').style.display = 'block';
+    document.getElementById('leadCard').style.display = 'none';
+    document.getElementById('howItWorksSection').style.display = 'none';
+    document.getElementById('fullDataButton').style.display = 'none';
+    
+    // Cycle through loading messages
+    loadingInterval = setInterval(() => {
+        const messageElement = document.getElementById('loadingMessage');
+        messageElement.textContent = loadingMessages[loadingMessageIndex];
+        loadingMessageIndex = (loadingMessageIndex + 1) % loadingMessages.length;
+    }, 2000);
+}
+
+function stopLoadingAnimation() {
+    document.getElementById('loadingAnimation').style.display = 'none';
+    if (loadingInterval) {
+        clearInterval(loadingInterval);
+        loadingMessageIndex = 0;
+    }
+}
+
+// Enhanced search functionality with API integration
+async function searchCompany() {
+    const input = document.getElementById('companyInput');
+    const companyName = input.value.trim();
+    
+    if (!companyName) {
+        alert('Please enter a company name');
+        return;
+    }
+    
+    startLoadingAnimation();
+    
+    try {
+        // Call your API
+        const response = await callLeadEnrichmentAPI(companyName);
+        
+        if (response && response.company_name) {
+            fullApiResponse = response;
+            populateLeadCard(response);
+            stopLoadingAnimation();
+            
+            // Show the card with animation
+            document.getElementById('leadCard').style.display = 'block';
+            document.getElementById('fullDataButton').style.display = 'block';
+            
+            // Animate progress bar
+            setTimeout(() => {
+                const progressBar = document.getElementById('progressBar');
+                progressBar.style.width = response.buying_intent?.score ? `${response.buying_intent.score}%` : '92%';
+            }, 500);
+            
+            // Show "How It Works" section after lead card
+            setTimeout(() => {
+                document.getElementById('howItWorksSection').style.display = 'block';
+            }, 1200);
+        } else {
+            throw new Error('Invalid API response');
+        }
+    } catch (error) {
+        console.error('API Error:', error);
+        stopLoadingAnimation();
+        
+        // Fallback to default method
+        showDefaultData(companyName);
+    }
+}
+
+async function callLeadEnrichmentAPI(companyName) {
+    const GEMINI_API_KEY = 'AIzaSyCm4mBZVbWMZgZ3YDZpSxDP9aNQ2SYKIVs'; // Replace with your actual key
+    const MODEL_ID = 'gemini-3-pro-preview';
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_ID}:generateContent?key=${GEMINI_API_KEY}`;
+    
+    const prompt = `You are a Lead Enrichment AI Agent. Research and return comprehensive business intelligence for the company: ${companyName}. 
+    Return structured JSON data with company financials, tech stack, buying intent, and growth signals for sales prioritization.
+    
+## Your Role
+You help sales teams transform basic company information (name, website, contact) into rich, detailed intelligence profiles that indicate buying intent and sales readiness.
+
+## Core Capabilities
+- Research company financials, funding, and growth indicators
+- Identify technology stack and tools being used
+- Detect hiring activity and expansion signals
+- Assess buying intent based on multiple signals
+- Provide context on why a lead might be a good fit
+
+## Data Collection Guidelines
+
+When researching a company, gather the following information:
+
+### 1. Basic Information
+- Full legal company name
+- Industry/sector
+- Headquarters location
+- Company website
+- Year founded
+
+### 2. Financial Indicators
+- Estimated annual revenue (in ₹ Crores or appropriate currency)
+- Revenue range if exact figures unavailable
+- Employee count
+- Recent growth rate or trends
+
+### 3. Funding & Investment
+- Funding stage (Bootstrapped, Seed, Series A/B/C, etc.)
+- Total funding raised
+- Recent funding rounds (date and amount)
+- Key investors
+
+### 4. Technology Stack
+- E-commerce platform (Shopify, WooCommerce, Magento, custom, etc.)
+- Payment gateways (Razorpay, PayU, Stripe, etc.)
+- Analytics tools (Google Analytics, Mixpanel, etc.)
+- Marketing automation tools
+- CRM systems
+- Other relevant tech tools
+
+### 5. Growth Signals & Buying Intent
+- Recent hiring activity (especially in tech, marketing, or sales roles)
+- Job postings count and types
+- Office expansion or new locations
+- Recent product launches
+- Seasonal expansion indicators (e.g., preparing for festive season)
+- Recent news or press releases
+- Website traffic trends (if available)
+- Social media activity and engagement
+
+### 6. Strategic Context
+- Current challenges or pain points (from news, blog posts, or industry reports)
+- Competitive landscape position
+- Recent initiatives or strategic focuses
+- Compliance or regulatory pressures
+- Market expansion activities
+
+## Buying Intent Scoring
+
+Calculate a Buying Intent Score (0-100%) based on:
+- **High Intent Signals (60-100%)**: Recent funding, active hiring, product launches, mentioned pain points you can solve, seasonal urgency, recent tech stack changes
+- **Medium Intent Signals (40-60%)**: Moderate growth, stable hiring, established tech stack, industry growth trends
+- **Low Intent Signals (0-40%)**: No recent activity, declining indicators, very small scale, no growth signals
+
+## Priority Classification
+
+Assign priority based on:
+- **High Priority**: High buying intent (>70%), strong financial indicators, clear pain points, immediate opportunities
+- **Medium Priority**: Medium buying intent (40-70%), stable company, potential fit but no urgency
+- **Low Priority**: Low buying intent (<40%), poor fit indicators, limited budget signals
+
+## Output Format
+
+Always return your findings in the following JSON structure:
+
+{
+  "company_name": "string",
+  "industry": "string",
+  "location": "string",
+  "website": "string",
+  "year_founded": "number or null",
+  "revenue": {
+    "amount": "string (e.g., '₹45-60 Cr')",
+    "currency": "string",
+    "confidence": "string (estimated/reported)"
+  },
+  "employee_count": {
+    "count": "string (e.g., '200-500')",
+    "trend": "string (growing/stable/declining)"
+  },
+  "funding": {
+    "stage": "string",
+    "total_raised": "string or null",
+    "recent_round": {
+      "date": "string or null",
+      "amount": "string or null"
+    },
+    "investors": ["string"] or []
+  },
+  "tech_stack": {
+    "ecommerce_platform": "string or null",
+    "payment_gateways": ["string"],
+    "analytics": ["string"],
+    "crm": "string or null",
+    "other_tools": ["string"]
+  },
+  "growth_signals": {
+    "hiring_active": "boolean",
+    "recent_job_postings": "number or null",
+    "key_roles_hiring": ["string"],
+    "office_expansion": "boolean",
+    "recent_product_launches": ["string"],
+    "seasonal_indicators": ["string"],
+    "recent_news": ["string"]
+  },
+  "buying_intent": {
+    "score": "number (0-100)",
+    "level": "string (High/Medium/Low)",
+    "reasoning": "string"
+  },
+  "priority": "string (High/Medium/Low)",
+  "why_good_fit": "string (2-3 sentences explaining why this lead should be pursued)",
+  "potential_pain_points": ["string"],
+  "recommended_approach": "string (how to approach this lead)",
+  "data_sources": ["string (URLs of sources used)"],
+  "last_updated": "string (ISO date)"
+}
+
+## Research Methodology
+
+1. **Start with official sources**: Company website, LinkedIn company page, Crunchbase, official press releases
+2. **Cross-reference data**: Verify information across multiple sources
+3. **Look for recent activity**: Prioritize information from the last 6-12 months
+4. **Industry context**: Consider industry-specific trends and seasonal factors
+5. **Be transparent about confidence**: Use "estimated" or "reported" labels, indicate when data is unavailable
+
+## Important Guidelines
+
+- **Be accurate**: Only include information you can verify. Use "null" or empty arrays for unavailable data
+- **Be current**: Prioritize recent information (last 6-12 months)
+- **Be relevant**: Focus on data that impacts buying decisions
+- **Be concise**: Keep explanatory text clear and actionable
+- **Cite sources**: Always include URLs of sources in the data_sources array
+- **Handle Indian companies**: Be familiar with Indian business terminology (Crores, Lakhs, funding landscape, festive seasons like Diwali)
+- **Privacy & ethics**: Only collect publicly available information. Do not access or request private company data
+
+## Example Interactions
+
+### User Input:
+"Enrich lead: Nykaa"
+
+### Your Response:
+{
+  "company_name": "Nykaa (FSN E-Commerce Ventures Ltd)",
+  "industry": "Beauty & Personal Care E-commerce",
+  "location": "Mumbai, Maharashtra, India",
+  "website": "https://www.nykaa.com",
+  "year_founded": 2012,
+  "revenue": {
+    "amount": "₹4,000+ Cr",
+    "currency": "INR",
+    "confidence": "reported"
+  },
+  "employee_count": {
+    "count": "3,000+",
+    "trend": "growing"
+  },
+  "funding": {
+    "stage": "Public (IPO 2021)",
+    "total_raised": "₹350+ Cr pre-IPO",
+    "recent_round": {
+      "date": "2021-11",
+      "amount": "IPO - ₹5,352 Cr"
+    },
+    "investors": ["TPG Growth", "Lighthouse India", "Fidelity"]
+  },
+  "tech_stack": {
+    "ecommerce_platform": "Custom built platform",
+    "payment_gateways": ["Razorpay", "PayU", "Paytm"],
+    "analytics": ["Google Analytics", "Clevertap"],
+    "crm": "Salesforce",
+    "other_tools": ["AWS", "MongoDB"]
+  },
+  "growth_signals": {
+    "hiring_active": true,
+    "recent_job_postings": 45,
+    "key_roles_hiring": ["Data Analyst", "Product Manager", "Tech Lead"],
+    "office_expansion": true,
+    "recent_product_launches": ["Nykaa Fashion expansion", "International shipping"],
+    "seasonal_indicators": ["Preparing for festive season sales", "Diwali campaign planning"],
+    "recent_news": ["Expanding omnichannel presence", "Opening new retail stores"]
+  },
+  "buying_intent": {
+    "score": 85,
+    "level": "High",
+    "reasoning": "Strong growth trajectory with active hiring in analytics and tech roles. Expanding operations indicate need for better data tools. Seasonal preparation suggests urgency for analytics solutions."
+  },
+  "priority": "High",
+  "why_good_fit": "Nykaa is actively scaling with 45+ open positions and expanding omnichannel operations. Their focus on data-driven decisions and upcoming festive season makes them an ideal prospect for advanced analytics solutions that can handle high-traffic periods.",
+  "potential_pain_points": [
+    "Managing increased traffic during festive seasons",
+    "Data integration across online and offline channels",
+    "Real-time inventory analytics for omnichannel operations",
+    "Customer behavior tracking across multiple touchpoints"
+  ],
+  "recommended_approach": "Lead with omnichannel analytics capabilities and festive season case studies. Emphasize real-time reporting and scalability. Connect with their analytics or product teams currently hiring.",
+  "data_sources": [
+    "https://www.nykaa.com",
+    "https://www.linkedin.com/company/nykaa-com",
+    "https://www.crunchbase.com/organization/nykaa"
+  ],
+  "last_updated": "2025-11-21"
+}
+
+## Error Handling
+
+If you cannot find sufficient information about a company:
+- Return the JSON structure with available data
+- Set unavailable fields to null or empty arrays
+- Include a note in "why_good_fit" explaining limited data: "Limited public information available. Manual research recommended."
+- Set buying_intent.score to 0 and level to "Unknown"
+
+## Limitations
+
+- You can only access publicly available information
+- Some financial data may be estimated rather than exact
+- Private companies may have limited information available
+- Always indicate confidence levels for estimated data
+
+Remember: Your goal is to help sales teams work smarter by providing actionable intelligence that helps them prioritize leads and personalize their approach. Focus on insights that directly impact sales decisions.
+    `;
+        try {
+        const response = await fetch(API_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                contents: [{
+                    role: "user",
+                    parts: [{ text: prompt }]
+                }],
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    temperature: 0.1,
+                    maxOutputTokens: 4000
+                },
+                tools: [{
+                    googleSearch: {}
+                }]
+            })
+        });
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('API Error Response:', errorText);
+            throw new Error(`HTTP error! status: ${response.status} - ${errorText}`);
+        }
+        
+        const data = await response.json();
+        console.log("Full API Response:", data);
+        
+        // Parse the complete response (non-streaming)
+        if (data.candidates && data.candidates[0] && data.candidates[0].content) {
+            const content = data.candidates[0].content.parts[0].text;
+            try {
+                return JSON.parse(content);
+            } catch (parseError) {
+                console.error('JSON Parse Error:', parseError);
+                console.log('Raw content:', content);
+                throw new Error('Failed to parse JSON response');
+            }
+        } else {
+            console.error('Unexpected response structure:', data);
+            throw new Error('Invalid response format');
+        }
+    } catch (error) {
+        console.error('API call failed:', error);
+        throw error;
+    }
+}
+
+function populateLeadCard(data) {
+    // Update company name
+    document.getElementById('companyName').textContent = data.company_name || 'Unknown Company';
+    
+    // Update revenue
+    const revenueElements = document.querySelectorAll('.grid > div');
+    if (revenueElements[0]) {
+        const revenueText = revenueElements[0].querySelector('p:last-child');
+        if (revenueText) revenueText.textContent = data.revenue?.amount || '₹45–60 Cr (estimated)';
+    }
+    
+    // Update funding
+    if (revenueElements[1]) {
+        const fundingText = revenueElements[1].querySelector('p');
+        const fundingBadge = revenueElements[1].querySelector('span');
+        if (fundingText) fundingText.textContent = data.funding?.total_raised ? 'Recently raised' : 'Funding info available';
+        if (fundingBadge) fundingBadge.textContent = data.funding?.stage || 'Series A';
+    }
+    
+    // Update tech stack
+    if (revenueElements[2]) {
+        const techText = revenueElements[2].querySelector('p:last-child');
+        if (techText && data.tech_stack) {
+            const techItems = [];
+            if (data.tech_stack.ecommerce_platform) techItems.push(data.tech_stack.ecommerce_platform);
+            if (data.tech_stack.analytics?.length > 0) techItems.push(...data.tech_stack.analytics.slice(0, 2));
+            techText.textContent = techItems.join(', ') || 'Shopify, Google Analytics';
+        }
+    }
+    
+    // Update buying intent
+    if (revenueElements[3]) {
+        const intentSpan = revenueElements[3].querySelector('span:last-child');
+        if (intentSpan && data.buying_intent) {
+            const score = data.buying_intent.score || 92;
+            const level = data.buying_intent.level || 'HIGH';
+            intentSpan.textContent = `${level} (${score}%)`;
+        }
+    }
+    
+    // Update why good fit
+    if (revenueElements[4]) {
+        const fitText = revenueElements[4].querySelector('p:last-child');
+        if (fitText) {
+            fitText.textContent = data.why_good_fit || 'Preparing for festive season traffic growth';
+        }
+    }
+}
+
+function showDefaultData(companyName) {
+    document.getElementById('companyName').textContent = companyName;
+    document.getElementById('leadCard').style.display = 'block';
+    
+    // Reset and animate progress bar
+    document.getElementById('progressBar').style.width = '0%';
+    setTimeout(() => {
+        document.getElementById('progressBar').style.width = '92%';
+    }, 200);
+    
+    // Show "How It Works" section
+    setTimeout(() => {
+        document.getElementById('howItWorksSection').style.display = 'block';
+    }, 1200);
+}
+
+function showFullData() {
+    if (!fullApiResponse) {
+        alert('No complete data available');
+        return;
+    }
+    
+    const modal = document.createElement('div');
+    modal.className = 'fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4';
+    modal.innerHTML = `
+        <div class="bg-white dark:bg-slate-900 rounded-xl max-w-4xl max-h-[80vh] overflow-auto p-6">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold text-[#111813] dark:text-white">Complete AI Analysis</h3>
+                <button onclick="this.parentElement.parentElement.parentElement.remove()" 
+                        class="text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200">
+                    <span class="material-symbols-outlined">close</span>
+                </button>
+            </div>
+            <pre class="bg-slate-100 dark:bg-slate-800 p-4 rounded-lg text-sm overflow-auto max-h-96 text-[#111813] dark:text-white">${JSON.stringify(fullApiResponse, null, 2)}</pre>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// Show the card on page load
+window.addEventListener('load', function() {
+    setTimeout(() => {
+        document.getElementById('leadCard').style.display = 'block';
+        setTimeout(() => {
+            document.getElementById('progressBar').style.width = '92%';
+        }, 500);
+        setTimeout(() => {
+            document.getElementById('howItWorksSection').style.display = 'block';
+        }, 1200);
+    }, 800);
+});
+
+// Enter key functionality for search
+document.getElementById('companyInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchCompany();
+    }
+});
+
+// Next insight button functionality
+function nextInsight() {
+    const button = event.target;
+    button.innerHTML = '<span class="truncate">Loading...</span>';
+    button.disabled = true;
+    setTimeout(() => {
+        window.location.href = 'demo-second.html';
+    }, 800);
+}
+
+// Add hover effects
+document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('companyInput');
+    
+    input.addEventListener('focus', function() {
+        if (this.value === 'FlipKart Style') {
+            this.value = '';
+            this.classList.add('typing-animation');
+        }
+    });
+    
+    input.addEventListener('blur', function() {
+        this.classList.remove('typing-animation');
+        if (this.value === '') {
+            this.value = 'FlipKart Style';
+        }
+    });
+    
+    const gridItems = document.querySelectorAll('.grid > div');
+    gridItems.forEach(item => {
+        item.addEventListener('mouseenter', function() {
+            this.style.backgroundColor = 'rgba(19, 236, 91, 0.05)';
+            this.style.transition = 'background-color 0.2s ease';
+        });
+        
+        item.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = '';
+        });
+    });
+});
+</script>
+</body></html>
